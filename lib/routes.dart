@@ -6,6 +6,7 @@ class AppRoutes {
 
   static Map<String, Widget Function(BuildContext)> routes = {
     "/": (_) => const InitialScreen(),
+    "/Register": (_) => RegisterScreen(),
     /* "/home" : const HomeScreen(),
     "/chat" : const ChatScreen(), */
   };

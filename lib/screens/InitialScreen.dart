@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../styles.dart';
+import '../widgets/widgets.dart';
 
 class InitialScreen extends StatefulWidget {
   const InitialScreen({super.key});
@@ -12,13 +13,13 @@ class _InitialScreenState extends State<InitialScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppStyles.secondColor,
+      backgroundColor: AppStyles.primaryColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              height: 200,
+              height: 230,
             ),
             /* 
             Padding(
@@ -43,30 +44,11 @@ class _InitialScreenState extends State<InitialScreen> {
                             const BoxConstraints.tightForFinite(width: 270),
                         child: Image.asset('assets/images/bfiqMsg.png'),
                       ),
-                      GestureDetector(
-                        onTap: () => print("Loguear"),
-                        child: Container(
-                          width: double.infinity,
-                          height: 50,
-                          /* constraints:
-                              const BoxConstraints.tightForFinite(width: 130), */
-                          decoration: BoxDecoration(
-                              color: AppStyles.secondColor,
-                              borderRadius: BorderRadius.circular(20)),
-                          child: const Center(
-                            child: Text(
-                              "Ingresar",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                          ),
-                        ),
-                      ),
+                      ButtonsWt()
+                          .buttonPrimaryColor(() => print("test"), "Ingresar"),
                       const SizedBox(height: 20),
                       GestureDetector(
-                        onTap: () => print("Redirigir al registro"),
+                        onTap: () => Navigator.pushNamed(context, "/Register"),
                         child: Container(
                           width: double.infinity,
                           height: 50,
@@ -74,7 +56,7 @@ class _InitialScreenState extends State<InitialScreen> {
                               const BoxConstraints.tightForFinite(width: 130), */
                           decoration: BoxDecoration(
                               border: Border.all(
-                                  color: AppStyles.secondColor, width: 1),
+                                  color: AppStyles.primaryColor, width: 1),
                               borderRadius: BorderRadius.circular(20)),
                           child: const Center(
                             child: Text(

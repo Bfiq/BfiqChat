@@ -1,1 +1,2 @@
-export './LoginScreen.dart';
+export 'InitialScreen.dart';
+export 'RegisterScreen.dart';
