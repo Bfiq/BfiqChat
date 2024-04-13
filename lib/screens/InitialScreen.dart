@@ -44,8 +44,9 @@ class _InitialScreenState extends State<InitialScreen> {
                             const BoxConstraints.tightForFinite(width: 270),
                         child: Image.asset('assets/images/bfiqMsg.png'),
                       ),
-                      ButtonsWt()
-                          .buttonPrimaryColor(() => print("test"), "Ingresar"),
+                      ButtonsWt().buttonPrimaryColor(
+                          () => Navigator.pushNamed(context, "/login"),
+                          "Iniciar Sesión"),
                       const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () => Navigator.pushNamed(context, "/Register"),

@@ -32,9 +32,14 @@ class AuthService {
 
       //Verificar que llega?
       return user;
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
+      if (e.code == "invalid-credential") {
+        return 1;
+      }
     } catch (e) {
       print(e);
-      return;
+      return null;
     }
   }
 }
