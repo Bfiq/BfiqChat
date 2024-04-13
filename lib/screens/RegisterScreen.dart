@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import '../services/auth.dart';
 import '../styles.dart';
 import '../widgets/widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:getwidget/getwidget.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -16,22 +17,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _lastNamesController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  createUser() async {
-    try {
-      print("Entre?");
-      print("1.");
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: _emailController.text, password: _passwordController.text);
-
-      print("2.");
-      User? user = userCredential.user;
-      print('usuario: ${user!.uid}');
-    } catch (e) {
-      print("Error: $e");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,10 +130,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             const SizedBox(
                               height: 20,
                             ),
-                            ButtonsWt().buttonPrimaryColor(() {
+                            ButtonsWt().buttonPrimaryColor(() async {
                               if (formRegisterKey.currentState!.validate()) {
                                 // Si el formulario es válido, guarda los datos
-                                createUser();
+                                final result = await AuthService()
+                                    .createAccount(_emailController.text,
+                                        _passwordController.text);
+
+                                if (result == null) {
+                                  if (mounted) {
+                                    GFToast.showToast(
+                                        "Ha ocurrido un error inesperado",
+                                        context);
+                                  }
+                                  return;
+                                }
+
+                                if (result == 1) {
+                                  if (mounted) {
+                                    GFToast.showToast(
+                                        "Este correo ya esta siendo usado en el sistema",
+                                        context,
+                                        backgroundColor: Colors.redAccent,
+                                        toastDuration: 5);
+                                  }
+                                  return;
+                                }
+
+                                //Navigator.pushNamed(context, "home");
                               }
                             }, "Registrarse")
                           ],
