@@ -120,7 +120,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   return;
                                 }
 
-                                //Navigator.pushNamed(context, "home");
+                                if (mounted) {
+                                  Navigator.pushNamed(context, "/home");
+                                }
                               }
                             }, "Iniciar Sesión")
                           ],

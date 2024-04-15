@@ -8,8 +8,8 @@ class AppRoutes {
     "/": (_) => const InitialScreen(),
     "/Register": (_) => const RegisterScreen(),
     "/login": (_) => const LoginScreen(),
-    /* "/home" : const HomeScreen(),
-    "/chat" : const ChatScreen(), */
+    "/home": (_) => const HomeScreen(),
+    /* "/chat" : const ChatScreen(), */
   };
 
   static onGenerateRoute(RouteSettings settings) {

@@ -134,8 +134,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               if (formRegisterKey.currentState!.validate()) {
                                 // Si el formulario es válido, guarda los datos
                                 final result = await AuthService()
-                                    .createAccount(_emailController.text,
-                                        _passwordController.text);
+                                    .createAccount(
+                                        _emailController.text,
+                                        _passwordController.text,
+                                        _namesController.text,
+                                        _lastNamesController.text);
 
                                 if (result == null) {
                                   if (mounted) {
