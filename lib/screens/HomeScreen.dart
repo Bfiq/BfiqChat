@@ -67,12 +67,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            Align(
-                alignment: Alignment.bottomRight,
-                child: FloatingActionButton(
-                    onPressed: () => print("Buscar Usuario"))),
-            Text("data")
+            Expanded(
+              child: Column(
+                children: [
+                  userChat("Juan", "Ojeda", "Ultimo mensaje..."),
+                  //GFShimmer(child: userChat("Vanessa", "Sierra", "nada")) // retornar el widget con containers vacios
+                ],
+              ),
+            ),
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => print("Buscar Usuario"),
+        backgroundColor: AppStyles.primaryColor,
+        child: const Icon(
+          Icons.add,
+          size: 40,
+        ),
+      ),
+    );
+  }
+
+  Widget userChat(
+    //Agregar fecha y hora?
+    //Enviar uid para redirigir al chat
+    String nameUser,
+    String lastNameUser,
+    String lastMessage,
+  ) {
+    final textAvatar =
+        "${nameUser.substring(0, 1)}${lastNameUser.substring(0, 1)}";
+    return GFListTile(
+      titleText: nameUser,
+      subTitleText: lastMessage,
+      avatar: GFAvatar(
+        backgroundColor: AppStyles.primaryColor,
+        shape: GFAvatarShape.circle,
+        child: Text(
+          textAvatar,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
     );
