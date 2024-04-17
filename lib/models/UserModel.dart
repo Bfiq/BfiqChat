@@ -12,9 +12,9 @@ class UserModel {
       required this.email});
 
   factory UserModel.fromFirebaseJson(Map<String, dynamic> json) => UserModel(
-      names: json['nombre'],
-      lastNames: json['apellidos'],
-      email: json['email']);
+      names: json['nombre'] ?? "",
+      lastNames: json['apellidos'] ?? "",
+      email: json['email'] ?? "");
 
   Map<String, dynamic> toFirebaseJson() => {
         'nombre': names,

@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => print("Buscar Usuario"),
+        onPressed: () => Navigator.pushNamed(context, "/chat/add"),
         backgroundColor: AppStyles.primaryColor,
         child: const Icon(
           Icons.add,

@@ -160,7 +160,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   return;
                                 }
 
-                                //Navigator.pushNamed(context, "home");
+                                if (mounted) {
+                                  Navigator.pushNamed(context, "/login");
+                                }
                               }
                             }, "Registrarse")
                           ],
