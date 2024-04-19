@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:message_app/models/models.dart';
 import 'package:message_app/styles.dart';
 import 'package:message_app/widgets/widgets.dart';
@@ -13,6 +14,14 @@ class SearchUserChatScreen extends StatefulWidget {
 
 class _SearchUserChatScreenState extends State<SearchUserChatScreen> {
   final _searcher = TextEditingController();
+  final GFBottomSheetController _controller = GFBottomSheetController();
+
+  showBottom(/* String idUser, String name */) {
+    _controller.isBottomSheetOpened
+        ? _controller.hideBottomSheet()
+        : _controller.showBottomSheet();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,8 +61,12 @@ class _SearchUserChatScreenState extends State<SearchUserChatScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: snapshot.data!
-                          .map((user) => ChatsWt()
-                              .userChat(user.names, user.lastNames, ""))
+                          .map((user) => ChatsWt().userChat(
+                              user.names,
+                              user.lastNames,
+                              "",
+                              () =>
+                                  showBottom() /*createChat(user.id ?? "", user.names)*/))
                           .toList(), //asegurarse de que hallan datos
                     ),
                   ),
@@ -71,6 +84,28 @@ class _SearchUserChatScreenState extends State<SearchUserChatScreen> {
             },
           ),
         ],
+      ),
+      bottomSheet: GFBottomSheet(
+        controller: _controller,
+        contentBody: Container(
+          height: 200,
+          child: Center(
+              child: Text(
+            'Deseas crear un chat con ',
+            style: const TextStyle(
+                fontSize: 15, wordSpacing: 0.3, letterSpacing: 0.2),
+          )),
+        ),
+        stickyFooter: GestureDetector(
+          onTap: () => print("Crear chat"),
+          child: Container(
+              color: AppStyles.primaryColor,
+              child: const Text('Crear Chat',
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white))),
+        ),
       ),
     );
   }
