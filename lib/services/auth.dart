@@ -58,7 +58,7 @@ class AuthService {
       //Buscar el usuario en firesore
       final userDBReference = _db.collection("Usuarios").doc(user!.uid);
 
-      userDBReference.get().then((DocumentSnapshot doc) {
+      await userDBReference.get().then((DocumentSnapshot doc) {
         final data = doc.data() as Map<String, dynamic>;
         //Setear el usuario en el controlador
         userController.setUser(
@@ -68,6 +68,7 @@ class AuthService {
             email: email);
       });
 
+      print(user);
       return user;
     } on FirebaseAuthException catch (e) {
       print(e.code);

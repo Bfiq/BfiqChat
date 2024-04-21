@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:message_app/controllers/controllers.dart';
+import 'package:message_app/models/models.dart';
+import 'package:message_app/services/firestore.dart';
 import 'package:message_app/styles.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,8 +14,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final UserController userController = Get.find<UserController>();
+
   @override
   Widget build(BuildContext context) {
+    print(userController.user.id);
+    print(userController.user.names);
     return Scaffold(
       backgroundColor: AppStyles.ghostWhiteColor,
       bottomNavigationBar: const DefaultTabController(
@@ -46,10 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  decoration: BoxDecoration(color: Colors.white),
+                  decoration: const BoxDecoration(color: Colors.white),
                   height: 50,
                   width: 50,
-                  child: Icon(Icons.search),
+                  child: const Icon(Icons.search),
                 )
               ],
             ),
@@ -67,13 +75,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            Expanded(
-              child: Column(
-                children: [
-                  userChat("Juan", "Ojeda", "Ultimo mensaje..."),
-                  //GFShimmer(child: userChat("Vanessa", "Sierra", "nada")) // retornar el widget con containers vacios
-                ],
-              ),
+            FutureBuilder(
+              future:
+                  FirestoreService().getChatsByUser(userController.user.id!),
+              builder: (context, AsyncSnapshot<List<ChatModel>> snapshot) {
+                if (snapshot.hasData) {
+                  return Expanded(
+                    child: Column(
+                      children: [
+                        userChat("Juan", "Ojeda", "Ultimo mensaje..."),
+                        //GFShimmer(child: userChat("Vanessa", "Sierra", "nada")) // retornar el widget con containers vacios
+                      ],
+                    ),
+                  );
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else {
+                  return const Text("Ha ocurrido un error!");
+                }
+              },
             ),
           ],
         ),

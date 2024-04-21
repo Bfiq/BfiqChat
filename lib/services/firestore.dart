@@ -42,7 +42,7 @@ class FirestoreService {
   Future<bool> createChat(String idChatUser) async {
     try {
       print(userController.user.id);
-      final chatRef = _db.collection("mensajes").doc();
+      final chatRef = _db.collection("chat").doc();
 
       final chat =
           MessageModel(user1: userController.user.id!, user2: idChatUser);
@@ -53,6 +53,47 @@ class FirestoreService {
     } catch (e) {
       print(e);
       return false;
+    }
+  }
+
+  Future<List<ChatModel>> getChatsByUser(String userId) async {
+    try {
+      print("Entre a buscar los chats");
+      //Se cambio el modelo de firestore al no poder agrupar directamente desde la query
+      final queryGetChats = _db
+          .collection("chat")
+          .where("user1", isEqualTo: userController.user.id)
+          .get();
+
+      QuerySnapshot snapshot = await queryGetChats;
+
+      snapshot.docs.map((chat) {
+        final chatResult = chat.data();
+
+        if (chatResult is Map<String, dynamic> &&
+            chatResult.containsKey("user2")) {
+          //Buscar el user2
+          final userChat = getUserByUid(chatResult['user2']);
+        }
+
+        //ChatModel(idUserMessaging: , nameUser: nameUser, lastName: lastName)
+      });
+
+      return [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<UserModel?> getUserByUid(String uid) async {
+    try {
+      print("Entre a buscar el usuario del chat");
+      final queryGetUserByUid = _db.collection("Usuarios").doc(uid).get();
+
+      final result = await queryGetUserByUid;
+      print(result);
+    } catch (e) {
+      return null;
     }
   }
 }
