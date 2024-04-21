@@ -1,8 +1,8 @@
 class UserModel {
-  final String? id;
-  final String names;
-  final String lastNames;
-  final String email;
+  String? id;
+  String names;
+  String lastNames;
+  String email;
   //Agregar Foto
 
   UserModel(

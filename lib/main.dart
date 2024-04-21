@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+import 'package:message_app/controllers/userController.dart';
 import 'services/firebase_options.dart';
 import './routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FirebaseOptions firebaseOptions =
+      await DefaultFirebaseOptions.currentPlatform;
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: firebaseOptions);
 
   //await FirebaseAuth.instance.useAuthEmulator('localhost', 9009); //revisar el emulador local
 
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ChatApp',
       theme: ThemeData(
@@ -30,6 +32,9 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: AppRoutes.initialRoute,
       routes: AppRoutes.routes,
+      initialBinding: BindingsBuilder(() {
+        Get.lazyPut<UserController>(() => UserController());
+      }),
     );
   }
 }

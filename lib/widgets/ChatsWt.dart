@@ -9,12 +9,12 @@ class ChatsWt {
       String nameUser,
       String lastNameUser,
       String lastMessage,
-      Function funct) {
+      void Function()? funct) {
     final textAvatar =
         "${nameUser.substring(0, 1)}${lastNameUser.substring(0, 1)}";
     return GFListTile(
       icon: const Icon(Icons.group_add),
-      onTap: funct(),
+      onTap: funct,
       titleText: nameUser,
       subTitleText: lastMessage,
       avatar: GFAvatar(

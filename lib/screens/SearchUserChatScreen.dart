@@ -16,10 +16,51 @@ class _SearchUserChatScreenState extends State<SearchUserChatScreen> {
   final _searcher = TextEditingController();
   final GFBottomSheetController _controller = GFBottomSheetController();
 
-  showBottom(/* String idUser, String name */) {
-    _controller.isBottomSheetOpened
-        ? _controller.hideBottomSheet()
-        : _controller.showBottomSheet();
+  Future<void> showBottom(String? idUser, String name) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Nuevo chat"),
+          content: Container(
+              height: 120,
+              /* color: AppStyles.primaryColor, */
+              child: Column(
+                children: [
+                  idUser != null
+                      ? Column(
+                          children: [
+                            Text('¿Quieres crear un nuevo chat con $name?',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight:
+                                      FontWeight.bold, /* color: Colors.white */
+                                )),
+                            const SizedBox(height: 20),
+                            ButtonsWt().buttonPrimaryColor(() async {
+                              bool result =
+                                  await FirestoreService().createChat(idUser);
+
+                              if (!result) {
+                                GFToast.showToast(
+                                    'Ha ocurrido un error', context,
+                                    toastPosition: GFToastPosition.TOP,
+                                    backgroundColor: GFColors.DANGER,
+                                    toastDuration: 5);
+                              } else {
+                                if (mounted) {
+                                  Navigator.pop(context);
+                                }
+                              }
+                            }, "Crear Chat")
+                          ],
+                        )
+                      : const Text("Ha ocurrido un error!"),
+                ],
+              )),
+        );
+      },
+    );
   }
 
   @override
@@ -61,12 +102,10 @@ class _SearchUserChatScreenState extends State<SearchUserChatScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: snapshot.data!
-                          .map((user) => ChatsWt().userChat(
-                              user.names,
-                              user.lastNames,
-                              "",
-                              () =>
-                                  showBottom() /*createChat(user.id ?? "", user.names)*/))
+                          .map((user) => ChatsWt()
+                                  .userChat(user.names, user.lastNames, "", () {
+                                showBottom(user.id, user.names);
+                              }))
                           .toList(), //asegurarse de que hallan datos
                     ),
                   ),
@@ -89,22 +128,12 @@ class _SearchUserChatScreenState extends State<SearchUserChatScreen> {
         controller: _controller,
         contentBody: Container(
           height: 200,
-          child: Center(
+          child: const Center(
               child: Text(
             'Deseas crear un chat con ',
-            style: const TextStyle(
-                fontSize: 15, wordSpacing: 0.3, letterSpacing: 0.2),
+            style:
+                TextStyle(fontSize: 15, wordSpacing: 0.3, letterSpacing: 0.2),
           )),
-        ),
-        stickyFooter: GestureDetector(
-          onTap: () => print("Crear chat"),
-          child: Container(
-              color: AppStyles.primaryColor,
-              child: const Text('Crear Chat',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white))),
         ),
       ),
     );

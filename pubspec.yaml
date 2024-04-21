@@ -39,6 +39,8 @@ dependencies:
   firebase_auth: ^4.16.0
   cloud_firestore: ^4.14.0
   getwidget: ^4.0.0
+  flutter_dotenv: ^5.1.0
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +61,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
