@@ -82,10 +82,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (snapshot.hasData) {
                   return Expanded(
                     child: Column(
-                      children: [
+                      children: snapshot.data!
+                          .map((chat) =>
+                              userChat(chat.nameUser, chat.lastName, ""))
+                          .toList() /* [
                         userChat("Juan", "Ojeda", "Ultimo mensaje..."),
                         //GFShimmer(child: userChat("Vanessa", "Sierra", "nada")) // retornar el widget con containers vacios
-                      ],
+                      ] */
+                      ,
                     ),
                   );
                 } else if (snapshot.connectionState ==
