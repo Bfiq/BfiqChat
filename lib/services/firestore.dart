@@ -111,4 +111,25 @@ class FirestoreService {
       return null;
     }
   }
+
+  Future<List<MessageModel?>> getMessages(String uid) async {
+    List<MessageModel> messages = [];
+    try {
+      final queryGetMessages = _db
+          .collection("mensajes")
+          .where("user1", isEqualTo: userController.user.id)
+          .where("user2", isEqualTo: uid);
+
+      QuerySnapshot snapshot = await queryGetMessages.get();
+
+      return snapshot.docs
+          .map((doc) =>
+              MessageModel.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print(e);
+    }
+
+    return messages;
+  }
 }

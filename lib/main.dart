@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:message_app/controllers/chatController.dart';
+import 'package:message_app/controllers/controllers.dart';
 import 'package:message_app/controllers/userController.dart';
 import 'services/firebase_options.dart';
 import './routes.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
       initialBinding: BindingsBuilder(() {
         Get.lazyPut<UserController>(() => UserController());
         Get.lazyPut<ChatsController>(() => ChatsController());
+        Get.lazyPut<MessagesChatController>(() => MessagesChatController(""));
       }),
     );
   }
