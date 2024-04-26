@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:message_app/controllers/messagesChatController.dart';
+import 'package:message_app/services/firestore.dart';
 import 'package:message_app/styles.dart';
 
 class MessagingChatScreen extends StatefulWidget {
@@ -14,6 +15,7 @@ class MessagingChatScreen extends StatefulWidget {
 }
 
 class _MessagingChatScreenState extends State<MessagingChatScreen> {
+  final _messageController = TextEditingController();
   MessagesChatController messagesController =
       Get.find<MessagesChatController>();
   @override
@@ -44,7 +46,22 @@ class _MessagingChatScreenState extends State<MessagingChatScreen> {
                 ),
               )),
           TextField(
-            decoration: InputDecoration(hintText: "Mensaje"),
+            controller: _messageController,
+            decoration: InputDecoration(
+              hintText: "Mensaje",
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.send),
+                onPressed: () async {
+                  await FirestoreService().sendMessage(
+                      messagesController.chatId,
+                      _messageController.text,
+                      null,
+                      null);
+
+                  _messageController.clear();
+                },
+              ),
+            ),
           )
         ],
       ),

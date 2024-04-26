@@ -7,7 +7,7 @@ class MessageModel {
   String? message;
   String? audioUrl;
   String? imageUrl;
-  Timestamp? date;
+  DateTime? date;
 
   MessageModel(
       {this.id,

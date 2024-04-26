@@ -112,7 +112,7 @@ class FirestoreService {
     }
   }
 
-  Future<List<MessageModel?>> getMessages(String uid) async {
+  Future<List<MessageModel>> getMessages(String uid) async {
     List<MessageModel> messages = [];
     try {
       final queryGetMessages = _db
@@ -131,5 +131,26 @@ class FirestoreService {
     }
 
     return messages;
+  }
+
+  Future<void> sendMessage(
+      String uid, String? message, String? pathImage, String? pathAudio) async {
+    //Si envia un audio o imagen guardar en el bucket de storage
+    try {
+      final messageModel = MessageModel(
+          user1: userController.user.id!,
+          user2: uid,
+          message: message,
+          imageUrl: pathImage,
+          audioUrl: pathAudio,
+          date: DateTime.now());
+
+      final result = _db.collection("mensajes").doc();
+
+      await result.set(messageModel.toJson());
+    } catch (e) {
+      print(e);
+      return;
+    }
   }
 }
