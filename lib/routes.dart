@@ -10,7 +10,7 @@ class AppRoutes {
     "/login": (_) => const LoginScreen(),
     "/home": (_) => const HomeScreen(),
     "/chat/add": (_) => const SearchUserChatScreen(),
-    /* "/chat" : const ChatScreen(), */
+    "/messagesChat": (_) => const MessagingChatScreen(),
   };
 
   static onGenerateRoute(RouteSettings settings) {

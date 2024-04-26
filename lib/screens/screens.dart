@@ -3,3 +3,4 @@ export 'RegisterScreen.dart';
 export 'LoginScreen.dart';
 export 'HomeScreen.dart';
 export 'SearchUserChatScreen.dart';
+export 'MessagingChatScreen.dart';

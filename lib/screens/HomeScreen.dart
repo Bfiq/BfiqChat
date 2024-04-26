@@ -77,38 +77,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            /* FutureBuilder(
-              future:
-                  FirestoreService().getChatsByUser(userController.user.id!),
-              builder: (context, AsyncSnapshot<List<ChatModel>> snapshot) {
-                if (snapshot.hasData) {
-                  return Expanded(
-                    child: Column(
-                      children: snapshot.data!
-                          .map((chat) =>
-                              userChat(chat.nameUser, chat.lastName, ""))
-                          .toList() /* [
-                        userChat("Juan", "Ojeda", "Ultimo mensaje..."),
-                        //GFShimmer(child: userChat("Vanessa", "Sierra", "nada")) // retornar el widget con containers vacios
-                      ] */
-                      ,
-                    ),
-                  );
-                } else if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else {
-                  return const Text("Ha ocurrido un error!");
-                }
-              },
-            ), */
             Obx(() {
               if (chatsController.chats.isNotEmpty) {
                 return Expanded(
                   child: Column(
                       children: chatsController.chats
-                          .map((chat) =>
-                              userChat(chat.nameUser, chat.lastName, ""))
+                          .map((chat) => userChat(chat.idUserMessaging,
+                              chat.nameUser, chat.lastName, ""))
                           .toList()),
                 );
               } else {
@@ -135,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget userChat(
     //Agregar fecha y hora?
-    //Enviar uid para redirigir al chat
+    String uid,
     String nameUser,
     String lastNameUser,
     String lastMessage,
@@ -143,6 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final textAvatar =
         "${nameUser.substring(0, 1)}${lastNameUser.substring(0, 1)}";
     return GFListTile(
+      onTap: () => Navigator.pushNamed(context, "/messagesChat",
+          arguments: {'idUserChat': uid}),
       titleText: nameUser,
       subTitleText: lastMessage,
       avatar: GFAvatar(
