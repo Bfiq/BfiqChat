@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:message_app/controllers/chatController.dart';
 import 'package:message_app/controllers/controllers.dart';
 import 'package:message_app/models/models.dart';
 import 'package:message_app/services/firestore.dart';
@@ -15,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final UserController userController = Get.find<UserController>();
+  final ChatsController chatsController = Get.find<ChatsController>();
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            FutureBuilder(
+            /* FutureBuilder(
               future:
                   FirestoreService().getChatsByUser(userController.user.id!),
               builder: (context, AsyncSnapshot<List<ChatModel>> snapshot) {
@@ -99,7 +101,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   return const Text("Ha ocurrido un error!");
                 }
               },
-            ),
+            ), */
+            Obx(() {
+              if (chatsController.chats.isNotEmpty) {
+                return Expanded(
+                  child: Column(
+                      children: chatsController.chats
+                          .map((chat) =>
+                              userChat(chat.nameUser, chat.lastName, ""))
+                          .toList()),
+                );
+              } else {
+                if (chatsController.isLoading) {
+                  return const CircularProgressIndicator();
+                } else {
+                  return const Text("Aún no hay chats :c");
+                }
+              }
+            })
           ],
         ),
       ),

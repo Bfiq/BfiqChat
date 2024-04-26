@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:message_app/controllers/chatController.dart';
 import 'package:message_app/models/models.dart';
 import 'package:message_app/styles.dart';
 import 'package:message_app/widgets/widgets.dart';
@@ -15,6 +17,7 @@ class SearchUserChatScreen extends StatefulWidget {
 class _SearchUserChatScreenState extends State<SearchUserChatScreen> {
   final _searcher = TextEditingController();
   final GFBottomSheetController _controller = GFBottomSheetController();
+  ChatsController chatsController = Get.find<ChatsController>();
 
   Future<void> showBottom(String? idUser, String name) async {
     await showDialog(
@@ -49,6 +52,8 @@ class _SearchUserChatScreenState extends State<SearchUserChatScreen> {
                                     toastDuration: 5);
                               } else {
                                 if (mounted) {
+                                  //Refrescar los datos
+                                  chatsController.getDataChats();
                                   Navigator.pop(context);
                                 }
                               }
