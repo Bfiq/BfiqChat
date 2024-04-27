@@ -7,6 +7,8 @@ import 'package:message_app/controllers/messagesChatController.dart';
 import 'package:message_app/services/firestore.dart';
 import 'package:message_app/styles.dart';
 
+import '../models/models.dart';
+
 class MessagingChatScreen extends StatefulWidget {
   const MessagingChatScreen({super.key});
 
@@ -38,13 +40,38 @@ class _MessagingChatScreenState extends State<MessagingChatScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Obx(() => Expanded(
+          StreamBuilder(
+            stream: FirestoreService().getMessages(messagesController.chatId),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error al cargar los mensajes'),
+                );
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              List<MessageModel> messages = snapshot.data ?? [];
+
+              return SingleChildScrollView(
+                  child: Column(
+                children: messages.map((message) {
+                  return Text(message.message ?? "?");
+                }).toList(),
+              ));
+            },
+          ),
+          /* Obx(() => Expanded(
                 child: Column(
                   children: messagesController.messages
                       .map((element) => Text("test"))
                       .toList(),
                 ),
-              )),
+              )), */
           TextField(
             controller: _messageController,
             decoration: InputDecoration(

@@ -12,8 +12,8 @@ class MessagesChatController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    FirestoreService().getMessages(chatId).then((messages) {
+    /* FirestoreService().getMessages(chatId).then((messages) {
       this.messages = messages.obs as RxList<MessageModel>;
-    });
+    }); */
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import '../controllers/controllers.dart';
@@ -112,7 +114,7 @@ class FirestoreService {
     }
   }
 
-  Future<List<MessageModel>> getMessages(String uid) async {
+  Stream<List<MessageModel>> getMessages(String uid) async* {
     List<MessageModel> messages = [];
     try {
       final queryGetMessages = _db
@@ -120,17 +122,27 @@ class FirestoreService {
           .where("user1", isEqualTo: userController.user.id)
           .where("user2", isEqualTo: uid);
 
-      QuerySnapshot snapshot = await queryGetMessages.get();
+      // Iniciar listener para actualizaciones en tiempo real
+      queryGetMessages.snapshots().listen((snapshot) {
+        for (var message in snapshot.docs) {
+          print(message.data());
+          MessageModel messageModel = MessageModel.fromJson(message.data());
+          print("Modelo del mensaje");
+          print(messageModel);
+          messages.add(messageModel);
+          print(messages);
+        }
+      });
 
-      return snapshot.docs
-          .map((doc) =>
-              MessageModel.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
+      //controller.add(messages);
+      print("Mensajes ha enviar");
+      print(messages);
+      yield messages;
     } catch (e) {
       print(e);
+      //controller.addError("Error");
+      yield [];
     }
-
-    return messages;
   }
 
   Future<void> sendMessage(
@@ -143,7 +155,7 @@ class FirestoreService {
           message: message,
           imageUrl: pathImage,
           audioUrl: pathAudio,
-          date: DateTime.now());
+          date: Timestamp.fromDate(DateTime.now()));
 
       final result = _db.collection("mensajes").doc();
 
