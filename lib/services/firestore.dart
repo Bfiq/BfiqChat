@@ -64,9 +64,9 @@ class FirestoreService {
       print("Entre a buscar los chats");
       print(userController.user.id);
       //Se cambio el modelo de firestore al no poder agrupar directamente desde la query
-      final queryGetChats = _db
-          .collection("chat")
-          .where("user1", isEqualTo: userController.user.id);
+      final queryGetChats = _db.collection("chat").where(Filter.or(
+          Filter("user1", isEqualTo: userController.user.id),
+          Filter("user2", isEqualTo: userController.user.id)));
 
       QuerySnapshot snapshot = await queryGetChats.get();
 
@@ -78,7 +78,13 @@ class FirestoreService {
         if (chatResult is Map<String, dynamic> &&
             chatResult.containsKey("user2")) {
           //Buscar el user2
-          UserModel? userChat = await getUserByUid(chatResult['user2']);
+          final UserModel? userChat;
+
+          if (chatResult['user2'] == userController.user.id) {
+            userChat = await getUserByUid(chatResult['user1']);
+          } else {
+            userChat = await getUserByUid(chatResult['user2']);
+          }
 
           if (userChat != null) {
             final chat = ChatModel(
@@ -114,35 +120,24 @@ class FirestoreService {
     }
   }
 
-  Stream<List<MessageModel>> getMessages(String uid) async* {
-    List<MessageModel> messages = [];
-    try {
-      final queryGetMessages = _db
-          .collection("mensajes")
-          .where("user1", isEqualTo: userController.user.id)
-          .where("user2", isEqualTo: uid);
+  Stream<List<MessageModel>> getMessages(String uid) {
+    final queryGetMessages = _db
+        .collection("mensajes")
+        .where(Filter.or(
+            Filter.and(Filter("user1", isEqualTo: userController.user.id),
+                Filter("user2", isEqualTo: uid)),
+            Filter.and(Filter("user1", isEqualTo: uid),
+                Filter("user2", isEqualTo: userController.user.id))))
+        .orderBy("date");
 
-      // Iniciar listener para actualizaciones en tiempo real
-      queryGetMessages.snapshots().listen((snapshot) {
-        for (var message in snapshot.docs) {
-          print(message.data());
-          MessageModel messageModel = MessageModel.fromJson(message.data());
-          print("Modelo del mensaje");
-          print(messageModel);
-          messages.add(messageModel);
-          print(messages);
-        }
-      });
-
-      //controller.add(messages);
-      print("Mensajes ha enviar");
-      print(messages);
-      yield messages;
-    } catch (e) {
-      print(e);
-      //controller.addError("Error");
-      yield [];
-    }
+    return queryGetMessages.snapshots().map((snapshot) {
+      List<MessageModel> messages = [];
+      for (var message in snapshot.docs) {
+        MessageModel messageModel = MessageModel.fromJson(message.data());
+        messages.add(messageModel);
+      }
+      return messages;
+    });
   }
 
   Future<void> sendMessage(

@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:message_app/controllers/controllers.dart';
 import 'package:message_app/controllers/messagesChatController.dart';
 import 'package:message_app/services/firestore.dart';
 import 'package:message_app/styles.dart';
@@ -20,6 +21,8 @@ class _MessagingChatScreenState extends State<MessagingChatScreen> {
   final _messageController = TextEditingController();
   MessagesChatController messagesController =
       Get.find<MessagesChatController>();
+  UserController userController = Get.find<UserController>();
+
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> arguments =
@@ -59,19 +62,13 @@ class _MessagingChatScreenState extends State<MessagingChatScreen> {
 
               return SingleChildScrollView(
                   child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: messages.map((message) {
-                  return Text(message.message ?? "?");
+                  return messageWt(message);
                 }).toList(),
               ));
             },
           ),
-          /* Obx(() => Expanded(
-                child: Column(
-                  children: messagesController.messages
-                      .map((element) => Text("test"))
-                      .toList(),
-                ),
-              )), */
           TextField(
             controller: _messageController,
             decoration: InputDecoration(
@@ -93,5 +90,46 @@ class _MessagingChatScreenState extends State<MessagingChatScreen> {
         ],
       ),
     );
+  }
+
+  Widget messageWt(MessageModel message) {
+    final date = message.date!.toDate();
+    var colorMessage = Colors.white;
+    var alingmentMessage = MainAxisAlignment.start;
+
+    if (message.user1 == userController.user.id) {
+      //poner el chat de color verde y a la izquierda
+      colorMessage = AppStyles.primaryColor;
+      alingmentMessage = MainAxisAlignment.end;
+    }
+
+    if (message.message != null) {
+      return Row(
+        mainAxisAlignment: alingmentMessage,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: colorMessage,
+                ),
+                height: 50,
+                child: Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Column(
+                    children: [
+                      Text(message.message ?? ""),
+                      const SizedBox(height: 5),
+                      Text(date.toString().substring(10, 16)),
+                    ],
+                  ),
+                )),
+          ),
+        ],
+      );
+    }
+
+    return const Text("");
   }
 }
