@@ -4,16 +4,13 @@ import 'package:message_app/services/firestore.dart';
 
 class MessagesChatController extends GetxController {
   String chatId = "";
+  Rx<UserModel?> user = Rx<UserModel?>(null);
+
   MessagesChatController(this.chatId);
 
-  RxList<MessageModel> messages = RxList<MessageModel>();
+  void setUser({required String id}) async {
+    user.value = await FirestoreService().getUserByUid(id);
 
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-    /* FirestoreService().getMessages(chatId).then((messages) {
-      this.messages = messages.obs as RxList<MessageModel>;
-    }); */
+    print(user.value?.names ?? "Nombre!");
   }
 }

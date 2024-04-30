@@ -17,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final UserController userController = Get.find<UserController>();
   final ChatsController chatsController = Get.find<ChatsController>();
+  final MessagesChatController messagesChatController =
+      Get.find<MessagesChatController>();
 
   @override
   Widget build(BuildContext context) {
@@ -118,8 +120,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final textAvatar =
         "${nameUser.substring(0, 1)}${lastNameUser.substring(0, 1)}";
     return GFListTile(
-      onTap: () => Navigator.pushNamed(context, "/messagesChat",
-          arguments: {'idUserChat': uid}),
+      onTap: () {
+        messagesChatController.setUser(id: uid);
+
+        Navigator.pushNamed(context, "/messagesChat",
+            arguments: {'idUserChat': uid});
+      },
       titleText: nameUser,
       subTitleText: lastMessage,
       avatar: GFAvatar(

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:message_app/controllers/controllers.dart';
-import 'package:message_app/controllers/messagesChatController.dart';
 import 'package:message_app/services/firestore.dart';
 import 'package:message_app/styles.dart';
-
 import '../models/models.dart';
 
 class MessagingChatScreen extends StatefulWidget {
@@ -30,44 +26,67 @@ class _MessagingChatScreenState extends State<MessagingChatScreen> {
 
     messagesController.chatId = arguments['idUserChat'];
 
+    //Separar esta lógica de la vista
+    ImageProvider<Object> getUserAvatarImage() {
+      if (messagesController.user.value?.photo != null &&
+          messagesController.user.value?.photo != "") {
+        print("Imagen del bucket (Prox.)");
+        return NetworkImage(messagesController.user.value!.photo!);
+      } else {
+        print("Imagen default");
+        return const AssetImage('assets/images/defaultAvatar.png');
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppStyles.primaryColor,
-        leading: GFAvatar(
-          shape: GFAvatarShape.circle,
-          backgroundColor: AppStyles.ghostWhiteColor,
-        ),
-        title: Text("Nombre del usuario"),
+        title: Obx(() => Row(
+              children: [
+                GFAvatar(
+                    size: GFSize.SMALL,
+                    shape: GFAvatarShape.circle,
+                    backgroundColor: AppStyles.ghostWhiteColor,
+                    backgroundImage: getUserAvatarImage()),
+                const SizedBox(width: 15),
+                Text(messagesController.user.value?.names ?? "Nombre")
+              ],
+            )),
       ),
       backgroundColor: AppStyles.ghostWhiteColor,
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        /* mainAxisAlignment: MainAxisAlignment.spaceBetween, */
+        /* mainAxisSize: MainAxisSize.max, */
         children: [
-          StreamBuilder(
-            stream: FirestoreService().getMessages(messagesController.chatId),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error al cargar los mensajes'),
-                );
-              }
+          Expanded(
+            child: SingleChildScrollView(
+              child: StreamBuilder(
+                stream:
+                    FirestoreService().getMessages(messagesController.chatId),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: Text('Error al cargar los mensajes'),
+                    );
+                  }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
-              List<MessageModel> messages = snapshot.data ?? [];
+                  List<MessageModel> messages = snapshot.data ?? [];
 
-              return SingleChildScrollView(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: messages.map((message) {
-                  return messageWt(message);
-                }).toList(),
-              ));
-            },
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: messages.map((message) {
+                      return messageWt(message);
+                    }).toList(),
+                  );
+                },
+              ),
+            ),
           ),
           TextField(
             controller: _messageController,
