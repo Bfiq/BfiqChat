@@ -26,12 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
     print(userController.user.names);
     return Scaffold(
       backgroundColor: AppStyles.ghostWhiteColor,
-      bottomNavigationBar: const DefaultTabController(
+      bottomNavigationBar: DefaultTabController(
           length: 3,
           child: TabBar(
-              /* onTap: (value) => print(value), */
+              onTap: (value) {
+                print(value);
+              },
               indicatorColor: Colors.black,
-              tabs: [
+              tabs: const [
                 Tab(
                   icon: Icon(
                     Icons.chat_bubble,

@@ -65,7 +65,8 @@ class AuthService {
             id: user.uid,
             names: data['nombre'],
             lastNames: data['apellidos'],
-            email: email);
+            email: email,
+            photo: data['photo']);
       });
 
       print(user);

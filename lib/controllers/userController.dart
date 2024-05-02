@@ -8,10 +8,12 @@ class UserController extends GetxController {
       {required String id,
       required String names,
       required String lastNames,
-      required String email}) {
+      required String email,
+      String? photo}) {
     user.id = id;
     user.names = names;
     user.lastNames = lastNames;
     user.email = email;
+    user.photo = photo;
   }
 }
