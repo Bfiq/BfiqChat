@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
         Get.lazyPut<UserController>(() => UserController());
         Get.lazyPut<ChatsController>(() => ChatsController());
         Get.lazyPut<MessagesChatController>(() => MessagesChatController(""));
+        Get.lazyPut<TabBarController>(() => TabBarController());
       }),
     );
   }
