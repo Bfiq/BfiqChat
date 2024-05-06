@@ -46,9 +46,7 @@ class _InfoUserScreenState extends State<InfoUserScreen> {
                               shape: BoxShape.circle),
                           child: IconButton(
                               onPressed: () async {
-                                final image =
-                                    await GeneralWt().pickImageFromGallery();
-                                print(image);
+                                userController.changePhotoUser();
                               },
                               color: Colors.white,
                               icon: const Icon(Icons.edit)),

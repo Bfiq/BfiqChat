@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:message_app/models/models.dart';
+import 'package:message_app/services/storage.dart';
+import '../widgets/widgets.dart';
 
 class UserController extends GetxController {
   var user = UserModel(names: "", lastNames: "", email: "");
@@ -15,5 +17,15 @@ class UserController extends GetxController {
     user.lastNames = lastNames;
     user.email = email;
     user.photo = photo;
+  }
+
+  Future<void> changePhotoUser() async {
+    final image = await GeneralWt().pickImageFromGallery();
+
+    if (image != null) {
+      final result = await StorageService().sendImageToStorage(image);
+
+      //actualizar el path de la imagen en firestore/users
+    }
   }
 }
