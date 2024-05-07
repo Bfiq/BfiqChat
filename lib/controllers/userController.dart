@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:message_app/models/models.dart';
+import 'package:message_app/services/firestore.dart';
 import 'package:message_app/services/storage.dart';
 import '../widgets/widgets.dart';
 
@@ -23,9 +24,9 @@ class UserController extends GetxController {
     final image = await GeneralWt().pickImageFromGallery();
 
     if (image != null) {
-      final result = await StorageService().sendImageToStorage(image);
-
-      //actualizar el path de la imagen en firestore/users
+      //Buscar la anterior imagen y eliminarla del bucket
+      String urlImage = await StorageService().sendImageToStorage(image);
+      await FirestoreService().updateUrlImageProfile(urlImage);
     }
   }
 }

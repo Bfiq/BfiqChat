@@ -8,22 +8,24 @@ class StorageService {
   final storage = FirebaseStorage.instance;
   UserController userModel = Get.find<UserController>();
 
-  Future<bool> sendImageToStorage(File file) async {
+  Future<String> sendImageToStorage(File file) async {
     try {
-      //
       final storageRef = storage.ref();
       final nameFileinStorage =
           "photoProfiles/${userModel.user.id}${DateTime.now()}.jpg";
       final mountainsRef = storageRef.child(nameFileinStorage);
       print(mountainsRef);
 
-      final fileStorage = await mountainsRef.putFile(file);
-      print(fileStorage);
+      /* final fileStorage =  */ await mountainsRef.putFile(file);
+      /* print(fileStorage); */
 
-      return true;
+      final urlImage = await mountainsRef.getDownloadURL();
+      print(urlImage);
+
+      return urlImage;
     } catch (e) {
       print(e);
-      return false;
+      return "Error";
     }
   }
 }

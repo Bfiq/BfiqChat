@@ -160,4 +160,13 @@ class FirestoreService {
       return;
     }
   }
+
+  Future<void> updateUrlImageProfile(String url) async {
+    try {
+      final user = _db.collection("Usuarios").doc(userController.user.id);
+      await user.update({'photo': url});
+    } catch (e) {
+      print(e);
+    }
+  }
 }
