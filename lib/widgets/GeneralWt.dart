@@ -20,7 +20,7 @@ class GeneralWt {
 
   Widget tabBar() {
     return DefaultTabController(
-        length: 3,
+        length: 2,
         child: TabBar(
             onTap: (value) {
               tabBarController.selectedTab.value = value;
@@ -30,12 +30,6 @@ class GeneralWt {
               Tab(
                 icon: Icon(
                   Icons.chat_bubble,
-                  color: Colors.grey,
-                ),
-              ),
-              Tab(
-                icon: Icon(
-                  Icons.person,
                   color: Colors.grey,
                 ),
               ),

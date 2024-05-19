@@ -29,4 +29,8 @@ class UserController extends GetxController {
       await FirestoreService().updateUrlImageProfile(urlImage);
     }
   }
+
+  void userBlank() {
+    user = UserModel(names: "", lastNames: "", email: "");
+  }
 }

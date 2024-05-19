@@ -3,11 +3,8 @@ import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:message_app/controllers/chatController.dart';
 import 'package:message_app/controllers/controllers.dart';
-import 'package:message_app/models/models.dart';
-import 'package:message_app/services/firestore.dart';
 import 'package:message_app/styles.dart';
 import 'package:message_app/widgets/GeneralWt.dart';
-
 import 'InfoUser.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -28,32 +25,33 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     print(tabController.selectedTab);
     return Scaffold(
-      backgroundColor: AppStyles.ghostWhiteColor,
-      bottomNavigationBar: GeneralWt().tabBar(),
-      body: SafeArea(child: Obx(() {
-        print(tabController.selectedTab);
+        backgroundColor: AppStyles.ghostWhiteColor,
+        bottomNavigationBar: GeneralWt().tabBar(),
+        body: SafeArea(child: Obx(() {
+          print(tabController.selectedTab);
 
-        if (tabController.selectedTab.value == 1) {
-          return const InfoUserScreen();
-        }
+          if (tabController.selectedTab.value == 1) {
+            return const InfoUserScreen();
+          }
 
-        if (tabController.selectedTab.value == 2) {
-          return tabTwo();
-        }
-
-        return tabZero();
-      })),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, "/chat/add"),
-        backgroundColor: AppStyles.primaryColor,
-        child: const Icon(
-          Icons.add,
-          size: 40,
-        ),
-      ),
-    );
+          return tabZero();
+        })),
+        floatingActionButton: Obx(() {
+          return Visibility(
+            visible: tabController.selectedTab.value != 1,
+            child: FloatingActionButton(
+              onPressed: () => Navigator.pushNamed(context, "/chat/add"),
+              backgroundColor: AppStyles.primaryColor,
+              child: const Icon(
+                Icons.add,
+                size: 40,
+              ),
+            ),
+          );
+        }));
   }
 
+  //Separar?
   Widget tabZero() {
     return Column(
       children: [
@@ -100,18 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         })
       ],
-    );
-  }
-
-  Widget tabOne() {
-    return Column(
-      children: [Text("Tab 2")],
-    );
-  }
-
-  Widget tabTwo() {
-    return Column(
-      children: [Text("Tab 3")],
     );
   }
 

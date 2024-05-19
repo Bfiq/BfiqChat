@@ -92,6 +92,8 @@ class _MessagingChatScreenState extends State<MessagingChatScreen> {
             controller: _messageController,
             decoration: InputDecoration(
               hintText: "Mensaje",
+              filled: true,
+              fillColor: Colors.white,
               suffixIcon: IconButton(
                 icon: const Icon(Icons.send),
                 onPressed: () async {
@@ -115,11 +117,13 @@ class _MessagingChatScreenState extends State<MessagingChatScreen> {
     final date = message.date!.toDate();
     var colorMessage = Colors.white;
     var alingmentMessage = MainAxisAlignment.start;
+    var textStyle = TextStyle();
 
     if (message.user1 == userController.user.id) {
       //poner el chat de color verde y a la izquierda
       colorMessage = AppStyles.primaryColor;
       alingmentMessage = MainAxisAlignment.end;
+      textStyle = const TextStyle(color: Colors.white);
     }
 
     if (message.message != null) {
@@ -138,9 +142,9 @@ class _MessagingChatScreenState extends State<MessagingChatScreen> {
                   padding: const EdgeInsets.all(5),
                   child: Column(
                     children: [
-                      Text(message.message ?? ""),
+                      Text(message.message ?? "", style: textStyle),
                       const SizedBox(height: 5),
-                      Text(date.toString().substring(10, 16)),
+                      Text(date.toString().substring(10, 16), style: textStyle),
                     ],
                   ),
                 )),

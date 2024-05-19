@@ -1,13 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:message_app/controllers/userController.dart';
+import 'package:message_app/controllers/controllers.dart';
 import 'package:message_app/models/UserModel.dart';
 
 class AuthService {
   final _auth = FirebaseAuth.instance;
   final _db = FirebaseFirestore.instance;
   final UserController userController = Get.find<UserController>();
+  final TabBarController tabController = Get.find<TabBarController>();
 
   Future createAccount(
       String email, String password, String names, String lastNames) async {
@@ -80,5 +81,11 @@ class AuthService {
       print(e);
       return null;
     }
+  }
+
+  Future signOut() async {
+    await _auth.signOut();
+    userController.userBlank();
+    tabController.selectedTab.value = 0;
   }
 }
